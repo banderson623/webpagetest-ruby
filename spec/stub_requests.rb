@@ -5,6 +5,7 @@ module StubRequests
   TEST_URL = "http://todomvc.com/architecture-examples/emberjs/"
   TEST_ID = "131004_6T_3CX"
   OTHER_TEST_ID = "131004_GT_3A0"
+  PRIVATE_TEST_ID = "131005_GZ_3B0"
   SCRIPT = "some_encoded_script"
 
   # Run test stub
@@ -73,6 +74,14 @@ module StubRequests
     stub_request(:get, "http://www.webpagetest.org/jsonResult.php?pagespeed=1&test=#{OTHER_TEST_ID}").
       with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.9.2'}).
       to_return(:status => 200, :headers => {}, :body => test_running_response(OTHER_TEST_ID).to_json)
+
+  end
+  # Test result not finished stub
+  def test_result_running_request_private
+
+    stub_request(:get, "http://private.webpagetest.org/jsonResult.php?pagespeed=1&test=#{PRIVATE_TEST_ID}").
+      with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.9.2'}).
+      to_return(:status => 200, :headers => {}, :body => test_running_response(PRIVATE_TEST_ID).to_json)
   end
 
   # Status for test result not finished stub
@@ -82,11 +91,23 @@ module StubRequests
       to_return(:status => 200, :headers => {}, :body => test_running_response(OTHER_TEST_ID).to_json)
   end
 
+  # Status for test result not finished stub
+  def status_test_result_running_request_private
+    stub_request(:get, "http://private.webpagetest.org/testStatus.php?f=json&test=#{PRIVATE_TEST_ID}").
+        with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.9.2'}).
+        to_return(:status => 200, :headers => {}, :body => test_running_response(PRIVATE_TEST_ID).to_json)
+  end
+
   # Status for test result completed stub
   def status_test_result_completed_request
     stub_request(:get, "http://www.webpagetest.org/testStatus.php?f=json&test=#{OTHER_TEST_ID}").
       with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.9.2'}).
       to_return(:status => 200, :headers => {}, :body => test_completed_response(OTHER_TEST_ID).to_json)
+
+
+      stub_request(:get, "http://private.webpagetest.org/testStatus.php?f=json&test=#{PRIVATE_TEST_ID}").
+        with(:headers => {'Accept'=>'*/*', 'Accept-Encoding'=>'gzip;q=1.0,deflate;q=0.6,identity;q=0.3', 'User-Agent'=>'Faraday v0.9.2'}).
+        to_return(:status => 200, :headers => {}, :body => test_completed_response(PRIVATE_TEST_ID).to_json)
   end
 
   # Other test result after completion stub

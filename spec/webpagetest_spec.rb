@@ -6,6 +6,7 @@ describe Webpagetest do
   let(:test_url){ "http://todomvc.com/architecture-examples/emberjs/" }
   let(:script){ "some_encoded_script" }
   let(:test_id) { "131004_GT_3A0" }
+  let(:private_test_id) { "131005_GZ_3B0" }
   let(:wpt) { Webpagetest.new(k: key) }
   let(:wpt_private) { Webpagetest.new(k: key, options: { url: "http://private.webpagetest.org"}) }
 
@@ -102,6 +103,21 @@ describe Webpagetest do
     expect(response.raw).to be_instance_of Hashie::Mash
     expect(response.raw.statusCode).to be(200)
     expect(response.test_id).not_to be(nil)
+  end
+
+  # Set of test cases for retrieving a test result
+  it 'should get the result of a running test using its id on a private instance' do
+    test_result_running_request_private
+    response = wpt_private.test_result(private_test_id)
+
+    status_test_result_running_request_private
+    status = response.get_status
+    expect(status).to be(:running)
+
+    status_test_result_completed_request
+    other_test_result_request
+    status = response.get_status
+    status.should be(:completed)
   end
 
   # Test case for retrieving available locations
