@@ -71,6 +71,7 @@ module Webpagetest
         req.params['pagespeed'] = 1
       end
       response_body = Hashie::Mash.new(JSON.parse(response.body))
+      response_body.extend Hashie::Extensions::DeepFetch
       response_body.data.status_code = response_body.statusCode
       response_body.data.status_text = response_body.statusText
       @result = response_body.data
